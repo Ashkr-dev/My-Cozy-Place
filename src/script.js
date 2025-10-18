@@ -5,14 +5,14 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import CoffeeSmokeMaterial from "./materials/CoffeeSmoke";
 import FireMaterial from "./materials/fire";
-
+import CandlesMaterial from "./materials/Candles";
 /**
  * Base
  */
 // Debug
 const debugObject = {
   // Fairy & Lamp color
-  color: "#ecbdb1",
+  color: "#f4f3d7",
 };
 const gui = new GUI({
   width: 400,
@@ -75,6 +75,11 @@ const coffeeSmokeMaterial = new CoffeeSmokeMaterial(perlinTexture);
 const fireMaterial = new FireMaterial(perlinTexture, gui);
 
 /**
+ * Candles
+ */
+const candleMaterial = new CandlesMaterial(perlinTexture, gui);
+
+/**
  * Models
  */
 const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
@@ -104,8 +109,10 @@ const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
   FairyLightsEmission.material = LampBulbMaterial;
 
   // Candles
-  const CandlesEmission = gltf.scene.getObjectByName("Candles-Emission");
-  CandlesEmission.material = LampBulbMaterial;
+  const candlesThread = gltf.scene.getObjectByName("Candles-Emission");
+  candlesThread.material = new THREE.MeshBasicMaterial({
+    color: "#000000",
+  });
 
   // Coffee Smoke
   const coffeeSmoke = gltf.scene.getObjectByName("coffee-smoke");
@@ -114,6 +121,10 @@ const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
   // FirePlace Fire
   const fire = gltf.scene.getObjectByName("fire");
   fire.material = fireMaterial;
+
+  // Candles
+  const candles = gltf.scene.getObjectByName("Candles");
+  candles.material = candleMaterial;
 
   gltf.scene.scale.set(0.2, 0.2, 0.2);
   gltf.scene.position.set(0, -0.5, 0);
@@ -172,7 +183,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-debugObject.clearColor = "#030712";
+debugObject.clearColor = "#02020d";
 gui.addColor(debugObject, "clearColor").onChange(() => {
   renderer.setClearColor(debugObject.clearColor);
 });
@@ -188,6 +199,7 @@ const tick = () => {
   // Update materials
   coffeeSmokeMaterial.uniforms.uTime.value = elapsedTime;
   fireMaterial.uniforms.uTime.value = elapsedTime;
+  candleMaterial.uniforms.uTime.value = elapsedTime;
 
   // Update controls
   controls.update();

@@ -8,6 +8,8 @@ uniform float uFireTopIntensity;
 uniform float uDistortWavyMotion;
 uniform float uRisingSpeed;
 uniform float uFireIntensity;
+uniform float uFireRemapX;
+uniform float uFireRemapY;
 
 varying vec2 vUv;
 
@@ -19,8 +21,8 @@ void main() {
     fireUv.x += distortion;
 
     // Scale UV to compress flame shape
-    fireUv.x *= 0.5;
-    fireUv.y *= 0.3;
+    fireUv.x *= uFireRemapX;
+    fireUv.y *= uFireRemapY;
 
     // Animate upward
     // fireUv.y += uTime * 0.2;
