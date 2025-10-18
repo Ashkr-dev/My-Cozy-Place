@@ -43,7 +43,6 @@ export default class FireMaterial {
         uFireRemapY: new THREE.Uniform(this.debugObject.fireRemapY),
       },
       transparent: true,
-      depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
 

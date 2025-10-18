@@ -46,7 +46,6 @@ export default class CandlesMaterial {
       },
       side: THREE.DoubleSide,
       transparent: true,
-      depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
 
@@ -60,21 +59,27 @@ export default class CandlesMaterial {
 
   setupGUI(gui) {
     const candleFolder = gui.addFolder("Candles");
-    candleFolder.addColor(this.debugObject, "candleFireFirstColor").onChange(() => {
-      this.material.uniforms.uFireFirstColor.value.set(
-        new THREE.Color(this.debugObject.candleFireFirstColor)
-      );
-    });
-    candleFolder.addColor(this.debugObject, "candleFireSecondColor").onChange(() => {
-      this.material.uniforms.uFireSecondColor.value.set(
-        new THREE.Color(this.debugObject.candleFireSecondColor)
-      );
-    });
-    candleFolder.addColor(this.debugObject, "candleFireTopColor").onChange(() => {
-      this.material.uniforms.uFireTopColor.value.set(
-        new THREE.Color(this.debugObject.candleFireTopColor)
-      );
-    });
+    candleFolder
+      .addColor(this.debugObject, "candleFireFirstColor")
+      .onChange(() => {
+        this.material.uniforms.uFireFirstColor.value.set(
+          new THREE.Color(this.debugObject.candleFireFirstColor)
+        );
+      });
+    candleFolder
+      .addColor(this.debugObject, "candleFireSecondColor")
+      .onChange(() => {
+        this.material.uniforms.uFireSecondColor.value.set(
+          new THREE.Color(this.debugObject.candleFireSecondColor)
+        );
+      });
+    candleFolder
+      .addColor(this.debugObject, "candleFireTopColor")
+      .onChange(() => {
+        this.material.uniforms.uFireTopColor.value.set(
+          new THREE.Color(this.debugObject.candleFireTopColor)
+        );
+      });
     candleFolder
       .add(this.debugObject, "candleFireTopIntensity")
       .min(0)
@@ -119,7 +124,8 @@ export default class CandlesMaterial {
       .max(1)
       .step(0.01)
       .onChange(() => {
-        this.material.uniforms.uFireRemapX.value = this.debugObject.candleFireRemapX;
+        this.material.uniforms.uFireRemapX.value =
+          this.debugObject.candleFireRemapX;
       });
     candleFolder
       .add(this.debugObject, "candleFireRemapY")
@@ -127,10 +133,11 @@ export default class CandlesMaterial {
       .max(1)
       .step(0.01)
       .onChange(() => {
-        this.material.uniforms.uFireRemapY.value = this.debugObject.candleFireRemapY;
+        this.material.uniforms.uFireRemapY.value =
+          this.debugObject.candleFireRemapY;
       });
   }
-  
+
   // Optional: Method to update time if you want more control
   updateTime(time) {
     this.material.uniforms.uTime.value = time;

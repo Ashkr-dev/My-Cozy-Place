@@ -6,6 +6,17 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import CoffeeSmokeMaterial from "./materials/CoffeeSmoke";
 import FireMaterial from "./materials/fire";
 import CandlesMaterial from "./materials/Candles";
+import OverlayManager from "./managers/OverlayManager.js";
+import Stats from "stats.js";
+
+/**
+ * Stats
+ */
+
+const stats = new Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom);
+
 /**
  * Base
  */
@@ -13,10 +24,14 @@ import CandlesMaterial from "./materials/Candles";
 const debugObject = {
   // Fairy & Lamp color
   color: "#f4f3d7",
+  clearColor: "#02020d",
 };
+
 const gui = new GUI({
   width: 400,
 });
+gui.hide();
+gui.close();
 
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
@@ -27,8 +42,23 @@ const scene = new THREE.Scene();
 /**
  * Loaders
  */
-// Texture loader
-const textureLoader = new THREE.TextureLoader();
+const loadingManager = new THREE.LoadingManager();
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const dracoLoader = new DRACOLoader(loadingManager);
+dracoLoader.setDecoderPath("draco/");
+const gltfLoader = new GLTFLoader(loadingManager);
+gltfLoader.setDRACOLoader(dracoLoader);
+
+/**
+ * Overlay Manager
+ */
+const overlayManager = new OverlayManager(loadingManager, gui);
+overlayManager.addToScene(scene);
+
+/**
+ * Baked Textures & Perlin
+ */
 const perlinTexture = textureLoader.load("./perlin.png");
 perlinTexture.wrapS = THREE.RepeatWrapping;
 perlinTexture.wrapT = THREE.RepeatWrapping;
@@ -37,14 +67,6 @@ perlinTexture.wrapT = THREE.RepeatWrapping;
 const bakedTexture = textureLoader.load("./Baked7.jpg");
 bakedTexture.flipY = false;
 bakedTexture.colorSpace = THREE.SRGBColorSpace;
-
-// Draco loader
-const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath("draco/");
-
-// GLTF loader
-const gltfLoader = new GLTFLoader();
-gltfLoader.setDRACOLoader(dracoLoader);
 
 /**
  * Baked Material
@@ -182,8 +204,9 @@ const renderer = new THREE.WebGLRenderer({
 
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(debugObject.clearColor);
 
-debugObject.clearColor = "#02020d";
+// Add clear color control to GUI
 gui.addColor(debugObject, "clearColor").onChange(() => {
   renderer.setClearColor(debugObject.clearColor);
 });
@@ -194,6 +217,7 @@ gui.addColor(debugObject, "clearColor").onChange(() => {
 const clock = new THREE.Clock();
 
 const tick = () => {
+  stats.begin();
   const elapsedTime = clock.getElapsedTime();
 
   // Update materials
@@ -209,6 +233,8 @@ const tick = () => {
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick);
+
+  stats.end();
 };
 
 tick();
