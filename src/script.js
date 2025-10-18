@@ -84,11 +84,9 @@ const fireMaterial = new FireMaterial(perlinTexture, gui);
  * Models
  */
 const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
-  gltf.scene.traverse((child) => {
-    if (child.isMesh) {
-      child.material = bakedMaterial;
-    }
-  });
+  // Baked Mesh
+  const bakedMesh = gltf.scene.getObjectByName("Baked");
+  bakedMesh.material = bakedMaterial;
 
   /**
    * Emissions
