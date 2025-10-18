@@ -7,7 +7,7 @@ export default class FireMaterial {
     // Default configuration
     this.debugObject = {
       fireFirstColor: "#ff6600",
-      fireSecondColor: "#ff2e2e",
+      fireSecondColor: "#ff7b00",
       fireTopColor: "#d5c98b",
       fireTopIntensity: 1.5,
       distortWavyMotion: 0.02,

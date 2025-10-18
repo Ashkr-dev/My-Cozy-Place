@@ -4,14 +4,16 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import CoffeeSmokeMaterial from "./materials/CoffeeSmoke";
-import fireVertexShader from "./shaders/fire/vertex.glsl";
-import fireFragmentShader from "./shaders/fire/fragment.glsl";
 import FireMaterial from "./materials/fire";
 
 /**
  * Base
  */
 // Debug
+const debugObject = {
+  // Fairy & Lamp color
+  color: "#ecbdb1",
+};
 const gui = new GUI({
   width: 400,
 });
@@ -50,14 +52,6 @@ gltfLoader.setDRACOLoader(dracoLoader);
 const bakedMaterial = new THREE.MeshBasicMaterial({
   map: bakedTexture,
 });
-
-/**
- * Debug
- */
-const debugObject = {
-  // Fairy & Lamp color
-  color: "#ecbdb1",
-};
 
 /**
  * Emissive Material
@@ -177,6 +171,11 @@ const renderer = new THREE.WebGLRenderer({
 
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+debugObject.clearColor = "#030712";
+gui.addColor(debugObject, "clearColor").onChange(() => {
+  renderer.setClearColor(debugObject.clearColor);
+});
 
 /**
  * Animate
