@@ -8,6 +8,11 @@ export default class OverlayManager {
     this.loadingBar = document.querySelector(".loading-bar");
     this.setupOverlay();
     this.setupLoadingManager();
+
+    // Add these critical properties:
+    this.overlayMaterial.depthWrite = false;
+    this.overlayMaterial.depthTest = false;
+    this.overlay.renderOrder = 999;
   }
 
   setupOverlay() {

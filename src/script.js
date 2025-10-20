@@ -7,15 +7,14 @@ import CoffeeSmokeMaterial from "./materials/CoffeeSmoke";
 import FireMaterial from "./materials/fire";
 import CandlesMaterial from "./materials/Candles";
 import OverlayManager from "./managers/OverlayManager.js";
+import { VinylPlayerManager } from "./managers/VinylPlayerManager.js";
 import Stats from "stats.js";
-import gsap from "gsap";
 
 /**
  * Stats
  */
-
 const stats = new Stats();
-stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+stats.showPanel(0);
 document.body.appendChild(stats.dom);
 
 /**
@@ -23,7 +22,6 @@ document.body.appendChild(stats.dom);
  */
 // Debug
 const debugObject = {
-  // Fairy & Lamp color
   color: "#f4f3d7",
   clearColor: "#02020d",
 };
@@ -52,10 +50,38 @@ const gltfLoader = new GLTFLoader(loadingManager);
 gltfLoader.setDRACOLoader(dracoLoader);
 
 /**
- * Overlay Manager
+ * Managers
  */
+// Overlay Manager
 const overlayManager = new OverlayManager(loadingManager, gui);
 overlayManager.addToScene(scene);
+
+// Vinyl Player Manager
+const vinylPlayerManager = new VinylPlayerManager();
+
+/**
+ * Raycaster
+ */
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let currentIntersect = null;
+
+// Mouse events
+window.addEventListener("mousemove", (event) => {
+  mouse.x = (event.clientX / sizes.width) * 2 - 1;
+  mouse.y = -(event.clientY / sizes.height) * 2 + 1;
+});
+
+window.addEventListener("click", (event) => {
+  if (currentIntersect) {
+    const clickedObject = currentIntersect.object;
+
+    // Check if clicked object is part of vinyl player using the manager
+    if (vinylPlayerManager.isVinylObject(clickedObject)) {
+      vinylPlayerManager.handleClick();
+    }
+  }
+});
 
 /**
  * Baked Textures & Perlin
@@ -105,13 +131,12 @@ const candleMaterial = new CandlesMaterial(perlinTexture, gui);
 /**
  * Models
  */
-let vinylDisc = null;
-let vinylArm = null;
+let bakedMesh = null;
+
 const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
   // Baked Mesh
-  const bakedMesh = gltf.scene.getObjectByName("baked");
+  bakedMesh = gltf.scene.getObjectByName("baked");
   bakedMesh.material = bakedMaterial;
-  bakedMesh.renderOrder = 2;
 
   /**
    * Emissions
@@ -143,7 +168,6 @@ const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
   // Coffee Smoke
   const coffeeSmoke = gltf.scene.getObjectByName("coffee-smoke");
   coffeeSmoke.material = coffeeSmokeMaterial;
-  coffeeSmoke.renderOrder = 1;
 
   // FirePlace Fire
   const fire = gltf.scene.getObjectByName("fire");
@@ -153,29 +177,27 @@ const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
   const candles = gltf.scene.getObjectByName("Candles");
   candles.material = candleMaterial;
 
-  // Vinyl-player
-  vinylDisc = gltf.scene.getObjectByName("vinyl-disc");
-  vinylDisc.material = bakedMaterial;
+  /**
+   * Vinyl Player Setup
+   */
+  const vinylDisc = gltf.scene.getObjectByName("vinyl-disc");
+  const vinylArm = gltf.scene.getObjectByName("vinyl-arm");
+  const vinylPlayer =
+    gltf.scene.getObjectByName("vinyl-player") ||
+    gltf.scene.getObjectByName("vinylplayer") ||
+    gltf.scene.getObjectByName("record-player");
 
-  // Vinyl-arm
-  vinylArm = gltf.scene.getObjectByName("vinyl-arm");
-  vinylArm.material = bakedMaterial;
-  let tl = gsap.timeline();
-  tl.to(vinylArm.rotation, {
-    y: Math.PI / -6,
-    duration: 4,
-    delay: 5,
-    ease: "none",
-  });
-  tl.to(vinylArm.rotation, {
-    x: Math.PI / 30,
-  });
-  tl.to(vinylDisc.rotation, {
-    y: Math.PI * 2,
-    duration: 4,
-    repeat: -1,
-    ease: "none",
-  });
+  // Apply materials
+  if (vinylDisc) vinylDisc.material = bakedMaterial;
+  if (vinylArm) vinylArm.material = bakedMaterial;
+  if (vinylPlayer) vinylPlayer.material = bakedMaterial;
+
+  // Initialize vinyl player manager
+  const vinylInteractiveObjects = vinylPlayerManager.initialize(
+    vinylDisc,
+    vinylArm,
+    vinylPlayer
+  );
 
   gltf.scene.scale.set(0.2, 0.2, 0.2);
   gltf.scene.position.set(0, -0.5, 0);
@@ -191,15 +213,12 @@ const sizes = {
 };
 
 window.addEventListener("resize", () => {
-  // Update sizes
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
 
-  // Update camera
   camera.aspect = sizes.width / sizes.height;
   camera.updateProjectionMatrix();
 
-  // Update renderer
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
@@ -249,10 +268,37 @@ const tick = () => {
   stats.begin();
   const elapsedTime = clock.getElapsedTime();
 
+  // Update raycaster
+  raycaster.setFromCamera(mouse, camera);
+
+  // Get interactive objects from vinyl manager
+  const interactiveObjects = vinylPlayerManager.getInteractiveObjects();
+
+  // Check for intersections
+  const intersects = raycaster.intersectObjects(interactiveObjects);
+
+  // Handle hover effects
+  if (intersects.length > 0) {
+    if (!currentIntersect) {
+      document.body.style.cursor = "pointer";
+      document.body.classList.add("hovering-vinyl");
+    }
+    currentIntersect = intersects[0];
+  } else {
+    if (currentIntersect) {
+      document.body.style.cursor = "default";
+      document.body.classList.remove("hovering-vinyl");
+    }
+    currentIntersect = null;
+  }
+
   // Update materials
   coffeeSmokeMaterial.uniforms.uTime.value = elapsedTime;
   fireMaterial.uniforms.uTime.value = elapsedTime;
   candleMaterial.uniforms.uTime.value = elapsedTime;
+
+  // Update vinyl player (for any per-frame updates)
+  vinylPlayerManager.update();
 
   // Update controls
   controls.update();
@@ -260,9 +306,7 @@ const tick = () => {
   // Render
   renderer.render(scene, camera);
 
-  // Call tick again on the next frame
   window.requestAnimationFrame(tick);
-
   stats.end();
 };
 

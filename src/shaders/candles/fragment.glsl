@@ -11,7 +11,6 @@ uniform float uFireIntensity;
 uniform float uFireRemapX;
 uniform float uFireRemapY;
 
-
 varying vec2 vUv;
 
 void main() {
@@ -23,7 +22,7 @@ void main() {
 
     // Scale UV to compress flame shape
     fireUv.x *= uFireRemapX;
-    fireUv.y *= 0.3;
+    fireUv.y *= uFireRemapY;
 
     // Animate upward
     // fireUv.y += uTime * 0.2;

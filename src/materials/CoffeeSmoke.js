@@ -13,6 +13,7 @@ export default class CoffeeSmokeMaterial {
       },
       side: THREE.DoubleSide,
       transparent: true,
+      // wireframe: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
