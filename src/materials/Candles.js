@@ -46,6 +46,8 @@ export default class CandlesMaterial {
       },
       side: THREE.DoubleSide,
       transparent: true,
+      depthWrite: false,
+      // depthTest: false,
       blending: THREE.AdditiveBlending,
     });
 

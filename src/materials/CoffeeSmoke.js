@@ -1,6 +1,6 @@
-import * as THREE from 'three';
-import coffeeSmokeVertexShader from '../shaders/coffeeSmoke/vertex.glsl';
-import coffeeSmokeFragmentShader from '../shaders/coffeeSmoke/fragment.glsl';
+import * as THREE from "three";
+import coffeeSmokeVertexShader from "../shaders/coffeeSmoke/vertex.glsl";
+import coffeeSmokeFragmentShader from "../shaders/coffeeSmoke/fragment.glsl";
 
 export default class CoffeeSmokeMaterial {
   constructor(perlinTexture) {

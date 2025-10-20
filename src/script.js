@@ -8,6 +8,7 @@ import FireMaterial from "./materials/fire";
 import CandlesMaterial from "./materials/Candles";
 import OverlayManager from "./managers/OverlayManager.js";
 import Stats from "stats.js";
+import gsap from "gsap";
 
 /**
  * Stats
@@ -104,10 +105,13 @@ const candleMaterial = new CandlesMaterial(perlinTexture, gui);
 /**
  * Models
  */
+let vinylDisc = null;
+let vinylArm = null;
 const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
   // Baked Mesh
-  const bakedMesh = gltf.scene.getObjectByName("Baked");
+  const bakedMesh = gltf.scene.getObjectByName("baked");
   bakedMesh.material = bakedMaterial;
+  bakedMesh.renderOrder = 2;
 
   /**
    * Emissions
@@ -139,6 +143,7 @@ const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
   // Coffee Smoke
   const coffeeSmoke = gltf.scene.getObjectByName("coffee-smoke");
   coffeeSmoke.material = coffeeSmokeMaterial;
+  coffeeSmoke.renderOrder = 1;
 
   // FirePlace Fire
   const fire = gltf.scene.getObjectByName("fire");
@@ -147,6 +152,30 @@ const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
   // Candles
   const candles = gltf.scene.getObjectByName("Candles");
   candles.material = candleMaterial;
+
+  // Vinyl-player
+  vinylDisc = gltf.scene.getObjectByName("vinyl-disc");
+  vinylDisc.material = bakedMaterial;
+
+  // Vinyl-arm
+  vinylArm = gltf.scene.getObjectByName("vinyl-arm");
+  vinylArm.material = bakedMaterial;
+  let tl = gsap.timeline();
+  tl.to(vinylArm.rotation, {
+    y: Math.PI / -6,
+    duration: 4,
+    delay: 5,
+    ease: "none",
+  });
+  tl.to(vinylArm.rotation, {
+    x: Math.PI / 30,
+  });
+  tl.to(vinylDisc.rotation, {
+    y: Math.PI * 2,
+    duration: 4,
+    repeat: -1,
+    ease: "none",
+  });
 
   gltf.scene.scale.set(0.2, 0.2, 0.2);
   gltf.scene.position.set(0, -0.5, 0);
