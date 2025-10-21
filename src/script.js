@@ -8,6 +8,7 @@ import FireMaterial from "./materials/Fire.js";
 import CandlesMaterial from "./materials/Candles.js";
 import OverlayManager from "./managers/OverlayManager.js";
 import { VinylPlayerManager } from "./managers/VinylPlayerManager.js";
+import { FireParticlesManager } from "./managers/FireParticlesManager.js";
 import Stats from "stats.js";
 
 /**
@@ -29,7 +30,7 @@ const debugObject = {
 const gui = new GUI({
   width: 400,
 });
-gui.hide();
+// gui.hide();
 gui.close();
 
 // Canvas
@@ -50,6 +51,13 @@ const gltfLoader = new GLTFLoader(loadingManager);
 gltfLoader.setDRACOLoader(dracoLoader);
 
 /**
+ * Baked Textures & Perlin
+ */
+const perlinTexture = textureLoader.load("./perlin.png");
+perlinTexture.wrapS = THREE.RepeatWrapping;
+perlinTexture.wrapT = THREE.RepeatWrapping;
+
+/**
  * Managers
  */
 // Overlay Manager
@@ -58,6 +66,10 @@ overlayManager.addToScene(scene);
 
 // Vinyl Player Manager
 const vinylPlayerManager = new VinylPlayerManager();
+
+// Fire Particles Manager
+const fireParticlesManager = new FireParticlesManager(perlinTexture, gui);
+fireParticlesManager.addToScene(scene);
 
 /**
  * Raycaster
@@ -83,15 +95,8 @@ window.addEventListener("click", (event) => {
   }
 });
 
-/**
- * Baked Textures & Perlin
- */
-const perlinTexture = textureLoader.load("./perlin.png");
-perlinTexture.wrapS = THREE.RepeatWrapping;
-perlinTexture.wrapT = THREE.RepeatWrapping;
-
 // Baked Texture
-const bakedTexture = textureLoader.load("./Baked7.jpg");
+const bakedTexture = textureLoader.load("./Baked7.webp");
 bakedTexture.flipY = false;
 bakedTexture.colorSpace = THREE.SRGBColorSpace;
 
@@ -297,7 +302,10 @@ const tick = () => {
   fireMaterial.uniforms.uTime.value = elapsedTime;
   candleMaterial.uniforms.uTime.value = elapsedTime;
 
-  // Update vinyl player (for any per-frame updates)
+  // Update fire particles through manager
+  fireParticlesManager.update(elapsedTime);
+
+  // Update vinyl player
   vinylPlayerManager.update();
 
   // Update controls
