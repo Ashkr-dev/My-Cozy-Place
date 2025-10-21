@@ -13,7 +13,7 @@ export class FireParticlesManager {
     this.uniforms = {
       uTime: new THREE.Uniform(0),
       uPixelRatio: new THREE.Uniform(Math.min(window.devicePixelRatio, 2)),
-      uSize: new THREE.Uniform(18),
+      uSize: new THREE.Uniform(28),
       uPerlinTexture: new THREE.Uniform(perlinTexture),
       uRiseSpeed: new THREE.Uniform(0.2),
       uRiseHeight: new THREE.Uniform(0.9),

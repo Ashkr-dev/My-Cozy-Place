@@ -9,6 +9,7 @@ import CandlesMaterial from "./materials/Candles.js";
 import OverlayManager from "./managers/OverlayManager.js";
 import { VinylPlayerManager } from "./managers/VinylPlayerManager.js";
 import { FireParticlesManager } from "./managers/FireParticlesManager.js";
+import { SnowManager } from "./managers/SnowManager.js";
 import Stats from "stats.js";
 
 /**
@@ -24,7 +25,7 @@ document.body.appendChild(stats.dom);
 // Debug
 const debugObject = {
   color: "#f4f3d7",
-  clearColor: "#02020d",
+  clearColor: "#121231",
 };
 
 const gui = new GUI({
@@ -70,6 +71,10 @@ const vinylPlayerManager = new VinylPlayerManager();
 // Fire Particles Manager
 const fireParticlesManager = new FireParticlesManager(perlinTexture, gui);
 fireParticlesManager.addToScene(scene);
+
+// Snow Manager
+const snowManager = new SnowManager(gui);
+snowManager.addToScene(scene);
 
 /**
  * Raycaster
@@ -226,6 +231,9 @@ window.addEventListener("resize", () => {
 
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // Update managers on resize
+  snowManager.handleResize();
 });
 
 /**
@@ -302,8 +310,9 @@ const tick = () => {
   fireMaterial.uniforms.uTime.value = elapsedTime;
   candleMaterial.uniforms.uTime.value = elapsedTime;
 
-  // Update fire particles through manager
+  // Update managers
   fireParticlesManager.update(elapsedTime);
+  snowManager.update(elapsedTime);
 
   // Update vinyl player
   vinylPlayerManager.update();
