@@ -10,13 +10,8 @@ import OverlayManager from "./managers/OverlayManager.js";
 import { VinylPlayerManager } from "./managers/VinylPlayerManager.js";
 import { FireParticlesManager } from "./managers/FireParticlesManager.js";
 import { SnowManager } from "./managers/SnowManager.js";
+import { PostProcessingManager } from "./managers/PostProcessingManager.js";
 import Stats from "stats.js";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
-import { SMAAPass } from "three/examples/jsm/postprocessing/SMAAPass.js";
-import { GammaCorrectionShader } from "three/examples/jsm/shaders/GammaCorrectionShader.js";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 
 /**
  * Stats
@@ -238,11 +233,9 @@ window.addEventListener("resize", () => {
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  effectComposer.setSize(sizes.width, sizes.height);
-  effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
   // Update managers on resize
   snowManager.handleResize();
+  postProcessingManager.resize(sizes.width, sizes.height);
 });
 
 /**
@@ -292,7 +285,6 @@ if (window.innerWidth < 768) {
 /**
  * Renderer
  */
-
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   antialias: true,
@@ -303,47 +295,15 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(debugObject.clearColor);
 
 // Add clear color control to GUI
-gui.addColor(debugObject, "clearColor").onChange(() => {
+const rendererFolder = gui.addFolder("Renderer");
+rendererFolder.addColor(debugObject, "clearColor").onChange(() => {
   renderer.setClearColor(debugObject.clearColor);
 });
 
 /**
- * Post-Processing
+ * Post Processing Manager
  */
-const renderTarget = new THREE.WebGLRenderTarget(800, 600, {
-  samples: renderer.getPixelRatio() === 1 ? 2 : 0,
-});
-
-const effectComposer = new EffectComposer(renderer, renderTarget);
-effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-effectComposer.setSize(sizes.width, sizes.height);
-
-const renderPass = new RenderPass(scene, camera);
-effectComposer.addPass(renderPass);
-
-const bloomPass = new UnrealBloomPass();
-bloomPass.strength = 1;
-bloomPass.radius = 1;
-bloomPass.threshold = 0.5;
-effectComposer.addPass(bloomPass);
-
-const bloomFolder = gui.addFolder("Bloom");
-bloomFolder.add(bloomPass, "enabled");
-bloomFolder.add(bloomPass, "strength", 0, 2).step(0.001);
-bloomFolder.add(bloomPass, "radius", 0, 2).step(0.001);
-bloomFolder.add(bloomPass, "threshold", 0, 1).step(0.001);
-
-const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader);
-effectComposer.addPass(gammaCorrectionPass);
-gammaCorrectionPass.enabled = false;
-
-const gammaCorrectionPassFolder = gui.addFolder("Gamma Correction");
-gammaCorrectionPassFolder.add(gammaCorrectionPass, "enabled");
-
-if (renderer.getPixelRatio() === 1 && renderer.capabilities.isWebGL2) {
-  const smaaPass = new SMAAPass();
-  effectComposer.addPass(smaaPass);
-}
+const postProcessingManager = new PostProcessingManager(renderer, scene, camera, gui);
 
 /**
  * Animate
@@ -386,6 +346,7 @@ const tick = () => {
   // Update managers
   fireParticlesManager.update(elapsedTime);
   snowManager.update(elapsedTime);
+  postProcessingManager.update(elapsedTime);
 
   // Update vinyl player
   vinylPlayerManager.update();
@@ -393,9 +354,8 @@ const tick = () => {
   // Update controls
   controls.update();
 
-  // Render
-  // renderer.render(scene, camera);
-  effectComposer.render();
+  // Render with post-processing
+  postProcessingManager.render();
 
   window.requestAnimationFrame(tick);
   stats.end();

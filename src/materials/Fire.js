@@ -13,8 +13,9 @@ export default class FireMaterial {
       distortWavyMotion: 0.03,
       risingSpeed: 0.15,
       fireIntensity: 1.8,
-      fireRemapX: 0.7,
-      fireRemapY: 0.3,
+      fireRemapX: 0.57,
+      fireRemapY: 0.36,
+      fireNoiseRemap: 0.333,
     };
 
     // Create the material
@@ -41,6 +42,7 @@ export default class FireMaterial {
         uRisingSpeed: new THREE.Uniform(this.debugObject.risingSpeed),
         uFireRemapX: new THREE.Uniform(this.debugObject.fireRemapX),
         uFireRemapY: new THREE.Uniform(this.debugObject.fireRemapY),
+        uFireNoiseRemap: new THREE.Uniform(this.debugObject.fireNoiseRemap),
       },
       transparent: true,
       depthWrite: false,
@@ -80,7 +82,7 @@ export default class FireMaterial {
       .add(this.debugObject, "fireTopIntensity")
       .min(0)
       .max(10)
-      .step(0.1)
+      .step(0.01)
       .onChange(() => {
         this.material.uniforms.uFireTopIntensity.value =
           this.debugObject.fireTopIntensity;
@@ -110,7 +112,7 @@ export default class FireMaterial {
       .add(this.debugObject, "fireIntensity")
       .min(0)
       .max(10)
-      .step(0.1)
+      .step(0.01)
       .onChange(() => {
         this.material.uniforms.uFireIntensity.value =
           this.debugObject.fireIntensity;
@@ -120,7 +122,7 @@ export default class FireMaterial {
       .add(this.debugObject, "fireRemapX")
       .min(0)
       .max(1)
-      .step(0.1)
+      .step(0.01)
       .onChange(() => {
         this.material.uniforms.uFireRemapX.value = this.debugObject.fireRemapX;
       });
@@ -129,9 +131,19 @@ export default class FireMaterial {
       .add(this.debugObject, "fireRemapY")
       .min(0)
       .max(1)
-      .step(0.1)
+      .step(0.01)
       .onChange(() => {
         this.material.uniforms.uFireRemapY.value = this.debugObject.fireRemapY;
+      });
+
+    fireFolder
+      .add(this.debugObject, "fireNoiseRemap")
+      .min(0)
+      .max(1)
+      .step(0.01)
+      .onChange(() => {
+        this.material.uniforms.uFireNoiseRemap.value =
+          this.debugObject.fireNoiseRemap;
       });
   }
 

@@ -10,6 +10,7 @@ uniform float uRisingSpeed;
 uniform float uFireIntensity;
 uniform float uFireRemapX;
 uniform float uFireRemapY;
+uniform float uFireNoiseRemap;
 
 varying vec2 vUv;
 
@@ -33,7 +34,7 @@ void main() {
     float fireNoise = texture2D(uPerlinTexture, fireUv).r;
 
     // Remap noise value for fire intensity
-    float intensity = smoothstep(0.2, 1.0, fireNoise);
+    float intensity = smoothstep(uFireNoiseRemap, 1.0, fireNoise);
 
     // Shape the flame using vUv mask
     intensity *= smoothstep(0.0, 0.3, vUv.x);      // left edge fade

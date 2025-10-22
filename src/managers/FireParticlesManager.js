@@ -120,7 +120,7 @@ export class FireParticlesManager {
       .name("Turbulence Z");
 
     // Optional: Add reset button
-    FireParticlesFolder.add(this, 'resetParticles').name("Reset Particles");
+    // FireParticlesFolder.add(this, 'resetParticles').name("Reset Particles");
   }
 
   addToScene(scene) {
@@ -138,7 +138,7 @@ export class FireParticlesManager {
 
   resetParticles() {
     // Optional: Reset particle positions or other properties
-    console.log("Resetting fire particles...");
+    // console.log("Resetting fire particles...");
   }
 
   // Getters
