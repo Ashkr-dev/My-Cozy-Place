@@ -61,6 +61,8 @@ export default class OverlayManager {
       });
       this.loadingBar.classList.add("ended");
       this.loadingBar.style.transform = "";
+
+      
     });
   }
 

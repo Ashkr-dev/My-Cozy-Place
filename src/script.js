@@ -25,13 +25,13 @@ document.body.appendChild(stats.dom);
 // Debug
 const debugObject = {
   color: "#f4f3d7",
-  clearColor: "#121231",
+  clearColor: "#090e15",
 };
 
 const gui = new GUI({
   width: 400,
 });
-// gui.hide();
+gui.hide();
 gui.close();
 
 // Canvas
@@ -246,14 +246,39 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 );
-camera.position.x = 4;
-camera.position.y = 2;
-camera.position.z = 4;
+
 scene.add(camera);
 
 // Controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
+controls.minPolarAngle = 0;
+controls.maxPolarAngle = Math.PI / 2;
+controls.minAzimuthAngle = 0;
+controls.maxAzimuthAngle = Math.PI / 2;
+controls.minDistance = 2;
+controls.maxDistance = 20;
+controls.update();
+
+if (window.innerWidth < 768) {
+  camera.position.set(11.426513867905662, 7.402854203982982, 14.84452462462721);
+  controls.target.set(
+    0.2749239606428338,
+    0.26336440652327575,
+    -0.14446226482608052
+  );
+} else {
+  camera.position.set(
+    3.1508910824642298,
+    1.8780255390554759,
+    3.3923576481199045
+  );
+  controls.target.set(
+    0.2749239606428338,
+    0.26336440652327575,
+    -0.14446226482608052
+  );
+}
 
 /**
  * Renderer
