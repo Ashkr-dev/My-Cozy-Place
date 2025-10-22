@@ -56,6 +56,7 @@ export class SnowManager {
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
+      
     });
   }
 
