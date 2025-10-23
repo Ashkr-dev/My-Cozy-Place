@@ -14,24 +14,17 @@ body {
     position: fixed;
 }
 
-/* Add these new rules */
-body {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: none;
-}
 
 
 .webgl {
     position: fixed;
-    /* top: 0;
+    top: 0;
     left: 0;
-    bottom: 0;
-    right: 0; */
     outline: none;
     width: 100%;
     height: 100%;
-    /* display: block; */
-    background: #000;
+    display: block;
+    overflow: hidden;
 
 }
 
