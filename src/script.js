@@ -31,7 +31,6 @@ const debugObject = {
 
 const gui = new GUI({
   title: "Debug",
-  width: window.innerWidth * 0.3,
 });
 gui.hide();
 gui.close();
@@ -265,7 +264,7 @@ controls.maxDistance = 20;
 controls.update();
 
 if (window.innerWidth < 768) {
-  gui.width = window.innerWidth / 0.5;
+  gui.width = window.innerWidth - 100;
   // Mobile
   camera.position.set(8.221521463083404, 7.027146726208887, 10.037595818238497);
   controls.target.set(
@@ -274,6 +273,7 @@ if (window.innerWidth < 768) {
     -0.14446226482608052
   );
 } else {
+
   camera.position.set(
     3.1508910824642298,
     1.8780255390554759,
