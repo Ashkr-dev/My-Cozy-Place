@@ -1,12 +1,13 @@
 import gsap from "gsap";
-import { Howl } from "howler";
+import { Howl, Howler } from "howler";
 
 // Create a sound instance
 const backgroundMusic = new Howl({
   src: ["backgroundMusic.mp3"],
-  volume: 0.08,
   loop: true,
 });
+
+Howler.volume(0.2);
 
 export class VinylPlayerManager {
   constructor() {
@@ -128,7 +129,6 @@ export class VinylPlayerManager {
 
     // Stop the backgroundMusic
     backgroundMusic.pause();
-    backgroundMusic.fade(0, 1, 1000);
   }
 
   // Check if an object is part of the vinyl player
