@@ -1,5 +1,12 @@
-import * as THREE from "three";
 import gsap from "gsap";
+import { Howl } from "howler";
+
+// Create a sound instance
+const backgroundMusic = new Howl({
+  src: ["backgroundMusic.mp3"],
+  volume: 0.08,
+  loop: true,
+});
 
 export class VinylPlayerManager {
   constructor() {
@@ -78,6 +85,9 @@ export class VinylPlayerManager {
         duration: 1,
         ease: "power2.out",
       });
+
+    // Play the backgroundMusic
+    backgroundMusic.play();
   }
 
   // Stop vinyl player animation
@@ -115,6 +125,10 @@ export class VinylPlayerManager {
           ease: "power2.out",
         });
     }
+
+    // Stop the backgroundMusic
+    backgroundMusic.pause();
+    backgroundMusic.fade(0, 1, 1000);
   }
 
   // Check if an object is part of the vinyl player

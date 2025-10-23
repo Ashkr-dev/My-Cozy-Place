@@ -263,7 +263,7 @@ controls.maxDistance = 20;
 controls.update();
 
 if (window.innerWidth < 768) {
-  camera.position.set(11.426513867905662, 7.402854203982982, 14.84452462462721);
+  camera.position.set(8.221521463083404, 7.027146726208887, 10.037595818238497);
   controls.target.set(
     0.2749239606428338,
     0.26336440652327575,
@@ -303,7 +303,12 @@ rendererFolder.addColor(debugObject, "clearColor").onChange(() => {
 /**
  * Post Processing Manager
  */
-const postProcessingManager = new PostProcessingManager(renderer, scene, camera, gui);
+const postProcessingManager = new PostProcessingManager(
+  renderer,
+  scene,
+  camera,
+  gui
+);
 
 /**
  * Animate

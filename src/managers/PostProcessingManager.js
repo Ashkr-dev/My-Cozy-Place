@@ -82,7 +82,7 @@ export class PostProcessingManager {
     gammaFolder.add(this.passes.gammaPass, 'enabled').name('Enabled');
 
     // Performance info
-    postProcessingFolder.add(this, 'getPassCount').name('Pass Count').listen();
+    // postProcessingFolder.add(this, 'getPassCount').name('Pass Count').listen();
   }
 
   setEnabled(enabled) {

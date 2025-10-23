@@ -26,7 +26,7 @@ export class SnowManager {
 
   createGeometry() {
     this.geometry = new THREE.BufferGeometry();
-    const snowCount = 20;
+    const snowCount = 15;
     const snowPositions = new Float32Array(snowCount * 3);
     const snowScale = new Float32Array(snowCount);
 
