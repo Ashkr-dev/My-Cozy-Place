@@ -265,6 +265,7 @@ controls.maxDistance = 20;
 controls.update();
 
 if (window.innerWidth < 768) {
+  gui.width = window.innerWidth / 0.5;
   // Mobile
   camera.position.set(8.221521463083404, 7.027146726208887, 10.037595818238497);
   controls.target.set(
