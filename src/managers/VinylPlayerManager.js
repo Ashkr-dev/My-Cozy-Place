@@ -7,7 +7,7 @@ const backgroundMusic = new Howl({
   loop: true,
 });
 
-Howler.volume(0.2);
+Howler.volume(0.4);
 
 export class VinylPlayerManager {
   constructor() {
@@ -55,7 +55,7 @@ export class VinylPlayerManager {
     }
     this.state.isPlaying = !this.state.isPlaying;
 
-    this.flashCursor();
+    // this.flashCursor();
   }
 
   // Start vinyl player animation
@@ -70,7 +70,7 @@ export class VinylPlayerManager {
       y: Math.PI * 2,
       duration: 4,
       repeat: -1,
-      ease: "none",
+      ease: "power2.inOut",
     });
 
     // Move arm to playing position
