@@ -55,7 +55,7 @@ export class VinylPlayerManager {
     }
     this.state.isPlaying = !this.state.isPlaying;
 
-    // this.flashCursor();
+    this.flashCursor();
   }
 
   // Start vinyl player animation
