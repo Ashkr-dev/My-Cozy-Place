@@ -12,6 +12,8 @@ import { FireParticlesManager } from "./managers/FireParticlesManager.js";
 import { SnowManager } from "./managers/SnowManager.js";
 import { PostProcessingManager } from "./managers/PostProcessingManager.js";
 import Stats from "stats.js";
+import themeVertexShader from "./shaders/theme/vertex.glsl";
+import themeFragmentShader from "./shaders/theme/fragment.glsl";
 
 /**
  * Stats
@@ -102,16 +104,33 @@ window.addEventListener("click", (event) => {
 });
 
 // Baked Texture
-const bakedTexture = textureLoader.load("./Baked7.webp");
-bakedTexture.flipY = false;
-bakedTexture.colorSpace = THREE.SRGBColorSpace;
+const bakedDayTexture = textureLoader.load("./Baked-Day.webp");
+bakedDayTexture.flipY = false;
+bakedDayTexture.colorSpace = THREE.SRGBColorSpace;
+
+const bakedNightTexture = textureLoader.load("./Baked-Night.webp");
+bakedNightTexture.flipY = false;
+bakedNightTexture.colorSpace = THREE.SRGBColorSpace;
 
 /**
  * Baked Material
  */
-const bakedMaterial = new THREE.MeshBasicMaterial({
-  map: bakedTexture,
+const bakedMaterial = new THREE.ShaderMaterial({
+  vertexShader: themeVertexShader,
+  fragmentShader: themeFragmentShader,
+  uniforms: {
+    uDayTexture: new THREE.Uniform(bakedDayTexture),
+    uNightTexture: new THREE.Uniform(bakedNightTexture),
+    uNightMix: new THREE.Uniform(0),
+  },
 });
+
+const themeFolder = gui.addFolder("Theme");
+themeFolder
+  .add(bakedMaterial.uniforms.uNightMix, "value")
+  .min(0)
+  .max(1)
+  .name("Night Mix");
 
 /**
  * Emissive Material
@@ -259,7 +278,7 @@ controls.minPolarAngle = 0;
 controls.maxPolarAngle = Math.PI / 2;
 controls.minAzimuthAngle = 0;
 controls.maxAzimuthAngle = Math.PI / 2;
-controls.minDistance = 2;
+controls.minDistance = 1.5;
 controls.maxDistance = 20;
 controls.update();
 
