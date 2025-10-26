@@ -121,7 +121,7 @@ const bakedMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uDayTexture: new THREE.Uniform(bakedDayTexture),
     uNightTexture: new THREE.Uniform(bakedNightTexture),
-    uNightMix: new THREE.Uniform(0),
+    uNightMix: new THREE.Uniform(1),
   },
 });
 
@@ -284,6 +284,9 @@ controls.update();
 
 if (window.innerWidth < 786) {
   gui.width = window.innerWidth - 100;
+
+  controls.enablePan = false;
+
   // Mobile
   camera.position.set(8.221521463083404, 7.027146726208887, 10.037595818238497);
   controls.target.set(

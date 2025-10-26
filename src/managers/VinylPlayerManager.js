@@ -9,6 +9,41 @@ const backgroundMusic = new Howl({
 
 Howler.volume(0.4);
 
+// Simple synchronized state
+let isMusicPlaying = false;
+let vinylPlayerInstance = null; // We'll store the vinyl player instance here
+
+const soundToggle = document.querySelector("#toggle");
+
+const toggleMusic = () => {
+  isMusicPlaying = !isMusicPlaying;
+
+  if (isMusicPlaying) {
+    backgroundMusic.play();
+    document.body.classList.add("on");
+    soundToggle.classList.add("active");
+
+    // Start vinyl animation if vinyl player exists
+    if (vinylPlayerInstance && !vinylPlayerInstance.state.isPlaying) {
+      vinylPlayerInstance.start();
+      vinylPlayerInstance.state.isPlaying = true;
+    }
+  } else {
+    backgroundMusic.pause();
+    document.body.classList.remove("on");
+    soundToggle.classList.remove("active");
+
+    // Stop vinyl animation if vinyl player exists
+    if (vinylPlayerInstance && vinylPlayerInstance.state.isPlaying) {
+      vinylPlayerInstance.stop();
+      vinylPlayerInstance.state.isPlaying = false;
+    }
+  }
+};
+
+// Toggle button event listener
+soundToggle.addEventListener("click", toggleMusic);
+
 export class VinylPlayerManager {
   constructor() {
     this.vinylDisc = null;
@@ -21,6 +56,9 @@ export class VinylPlayerManager {
       armAnimation: null,
       discAnimation: null,
     };
+
+    // Register this instance globally
+    vinylPlayerInstance = this;
   }
 
   // Initialize with the vinyl objects from the GLTF model
@@ -48,13 +86,8 @@ export class VinylPlayerManager {
 
   // Handle click on vinyl player
   handleClick() {
-    if (this.state.isPlaying) {
-      this.stop();
-    } else {
-      this.start();
-    }
-    this.state.isPlaying = !this.state.isPlaying;
-
+    // Simply call the global toggle function
+    toggleMusic();
     this.flashCursor();
   }
 
@@ -68,6 +101,7 @@ export class VinylPlayerManager {
     // Start disc rotation
     this.state.discAnimation = gsap.to(this.vinylDisc.rotation, {
       y: Math.PI * 2,
+      delay: 2,
       duration: 4,
       repeat: -1,
       ease: "power2.inOut",
@@ -86,9 +120,6 @@ export class VinylPlayerManager {
         duration: 1,
         ease: "power2.out",
       });
-
-    // Play the backgroundMusic
-    backgroundMusic.play();
   }
 
   // Stop vinyl player animation
@@ -126,9 +157,6 @@ export class VinylPlayerManager {
           ease: "power2.out",
         });
     }
-
-    // Stop the backgroundMusic
-    backgroundMusic.pause();
   }
 
   // Check if an object is part of the vinyl player
