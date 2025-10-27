@@ -55,18 +55,18 @@ export class DarkModeManager {
     // Hover Animation
     this.toggleButton.addEventListener("mouseenter", () => {
       this.gsap.to(this.toggleButton, {
-        scale: 1.3,
-        ease: "power2.inOut",
-        duration: 0.2,
+        scale: 1.5,
+        ease: "back.out(2)",
+        duration: 0.5,
         rotate: "-15deg",
       });
     });
     this.toggleButton.addEventListener("mouseleave", () => {
       this.gsap.to(this.toggleButton, {
         scale: 1,
-        ease: "power2.inOut",
-        duration: 0.2,
-        rotate: "0deg",
+        ease: "back.out(2)",
+        duration: 0.5,
+        rotate: 0,
       });
     });
   }
@@ -79,7 +79,7 @@ export class DarkModeManager {
   updateTheme() {
     // Update material uniform
     this.bakedMaterial.uniforms.uNightMix.value = this.isDarkMode ? 0 : 1;
-   
+
     // Update GUI to reflect changes
     this.bakedMaterial.uniforms.uNightMix.needsUpdate = true;
 

@@ -210,18 +210,18 @@ const hoverAnimation = () => {
   // Hover Animation
   soundToggle.addEventListener("mouseenter", () => {
     gsap.to(soundToggle, {
-      scale: 1.3,
-      ease: "power2.inOut",
-      duration: 0.2,
+      scale: 1.5,
+      ease: "back.out(2)",
+      duration: 0.5,
       rotate: "15deg",
     });
   });
   soundToggle.addEventListener("mouseleave", () => {
     gsap.to(soundToggle, {
       scale: 1,
-      ease: "power2.inOut",
-      duration: 0.2,
-      rotate: "0deg",
+      ease: "back.out(2)",
+      duration: 0.5,
+      rotate: 0,
     });
   });
 };
