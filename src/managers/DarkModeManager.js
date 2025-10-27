@@ -1,4 +1,13 @@
 import gsap from "gsap";
+import { Howl } from "howler";
+
+const popSound = new Howl({
+  src: ["pop-sound.mp3"],
+  preload: true, // Add preload to ensure it's ready
+  volume: 0.2,
+  fade: true,
+});
+
 
 export class DarkModeManager {
   constructor(bakedMaterial, gui) {
@@ -7,6 +16,7 @@ export class DarkModeManager {
     this.gsap = gsap;
     this.isDarkMode = false;
     this.toggleButton = document.querySelector(".toggle-theme");
+    this.soundEnabled = true; // Add sound toggle flag
 
     this.init();
   }
@@ -34,6 +44,11 @@ export class DarkModeManager {
         this.isDarkMode = value === 0;
         this.updateDOM();
       });
+
+    // Optional: Add sound control to GUI
+    themeFolder
+      .add(this, 'soundEnabled')
+      .name("Toggle Sound");
   }
 
   setupEventListeners() {
@@ -74,7 +89,57 @@ export class DarkModeManager {
 
   toggle() {
     this.isDarkMode = !this.isDarkMode;
+    
+    // Play pop sound when toggling
+    this.playToggleSound();
+    
+    // Add click animation
+    this.animateToggle();
+    
     this.updateTheme();
+  }
+
+  playToggleSound() {
+    if (this.soundEnabled && popSound) {
+      // Stop any currently playing instance to avoid overlap
+      popSound.stop();
+      
+      // Play the sound
+      popSound.play();
+      
+      // Optional: Add slight random pitch variation for more natural sound
+      const pitch = 0.9 + Math.random() * 0.2; // Between 0.9 and 1.1
+      popSound.rate(pitch);
+    }
+  }
+
+  animateToggle() {
+    // Click animation - quick scale down then back up
+    // this.gsap.to(this.toggleButton, {
+    //   scale: 0.8,
+    //   duration: 0.1,
+    //   ease: "power2.in",
+    //   onComplete: () => {
+    //     this.gsap.to(this.toggleButton, {
+    //       scale: 1.2,
+    //       duration: 0.2,
+    //       ease: "back.out(1.7)",
+    //       onComplete: () => {
+    //         this.gsap.to(this.toggleButton, {
+    //           scale: 1,
+    //           duration: 0.1
+    //         });
+    //       }
+    //     });
+    //   }
+    // });
+
+    // // Optional: Add rotation animation on click
+    // this.gsap.to(this.toggleButton, {
+    //   rotation: "+=360",
+    //   duration: 0.6,
+    //   ease: "back.out(1.7)"
+    // });
   }
 
   updateTheme() {
@@ -92,9 +157,11 @@ export class DarkModeManager {
     if (this.isDarkMode) {
       document.body.classList.add("dark");
       this.toggleButton.setAttribute("aria-pressed", "true");
+      this.toggleButton.setAttribute("aria-label", "Switch to light mode");
     } else {
       document.body.classList.remove("dark");
       this.toggleButton.setAttribute("aria-pressed", "false");
+      this.toggleButton.setAttribute("aria-label", "Switch to dark mode");
     }
   }
 
@@ -107,5 +174,10 @@ export class DarkModeManager {
   setDarkMode(isDark) {
     this.isDarkMode = isDark;
     this.updateTheme();
+  }
+
+  // Method to enable/disable sound
+  setSoundEnabled(enabled) {
+    this.soundEnabled = enabled;
   }
 }

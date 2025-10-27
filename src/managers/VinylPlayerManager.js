@@ -3,11 +3,33 @@ import { Howl, Howler } from "howler";
 
 // Create a sound instance
 const backgroundMusic = new Howl({
-  src: ["backgroundMusic.mp3"],
+  src: ["soft-piano.mp3"],
   loop: true,
+  preload: true,
+  volume: 0.4,
 });
 
-Howler.volume(0.4);
+const popSound = new Howl({
+  src: ["pop-sound.mp3"],
+  preload: true,
+  volume: 0.2,
+  fade: true,
+});
+
+const vinylSound = new Howl({
+  src: ["vinyl-noise.mp3"],
+  preload: true,
+  volume: 0.2,
+});
+
+const fireplaceCrackling = new Howl({
+  src: ["fire-crackling.mp3"],
+  preload: true,
+  autoplay: true,
+  volume: 0.25,
+});
+// fireplaceCrackling.play();
+
 
 // Simple synchronized state
 let isMusicPlaying = false;
@@ -19,8 +41,9 @@ const toggleMusic = () => {
   isMusicPlaying = !isMusicPlaying;
 
   if (isMusicPlaying) {
+    popSound.play();
     backgroundMusic.play();
-    backgroundMusic.fade(0, 1, 2000);
+    backgroundMusic.fade(0, 1, 1000);
     document.body.classList.add("on");
     soundToggle.classList.add("active");
 
@@ -30,8 +53,9 @@ const toggleMusic = () => {
       vinylPlayerInstance.state.isPlaying = true;
     }
   } else {
+    popSound.play();
     backgroundMusic.pause();
-    backgroundMusic.fade(1, 0, 2000);
+    backgroundMusic.fade(1, 0, 1000);
     document.body.classList.remove("on");
     soundToggle.classList.remove("active");
 
@@ -88,7 +112,16 @@ export class VinylPlayerManager {
 
   // Handle click on vinyl player
   handleClick() {
-    // Simply call the global toggle function
+    // Play vinyl sound when starting the vinyl player
+    if (!this.state.isPlaying) {
+      vinylSound.play();
+      vinylSound.fade(0, 0.5, 1000);
+      popSound.volume(0);
+    } else {
+      popSound.volume(0);
+    }
+
+    // Then call the global toggle function
     toggleMusic();
     this.flashCursor();
   }
@@ -103,10 +136,10 @@ export class VinylPlayerManager {
     // Start disc rotation
     this.state.discAnimation = gsap.to(this.vinylDisc.rotation, {
       y: Math.PI * 2,
-      delay: 2,
+      // delay: 2,
       duration: 4,
       repeat: -1,
-      ease: "power2.inOut",
+      ease: "none",
     });
 
     // Move arm to playing position
