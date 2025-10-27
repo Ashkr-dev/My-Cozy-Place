@@ -61,7 +61,23 @@ export class DarkModeManager {
         rotate: "-15deg",
       });
     });
+    this.toggleButton.addEventListener("touchstart", () => {
+      this.gsap.to(this.toggleButton, {
+        scale: 1.5,
+        ease: "back.out(2)",
+        duration: 0.5,
+        rotate: "-15deg",
+      });
+    });
     this.toggleButton.addEventListener("mouseleave", () => {
+      this.gsap.to(this.toggleButton, {
+        scale: 1,
+        ease: "back.out(2)",
+        duration: 0.5,
+        rotate: 0,
+      });
+    });
+    this.toggleButton.addEventListener("touchend", () => {
       this.gsap.to(this.toggleButton, {
         scale: 1,
         ease: "back.out(2)",
