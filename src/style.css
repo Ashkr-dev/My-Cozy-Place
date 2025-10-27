@@ -42,6 +42,8 @@ body {
 .loading-bar.ended {
     transform-origin: top right;
     transition: transform 1.0s ease-in-out;
+    will-change: transform;
+
 }
 
 #toggle {
@@ -50,7 +52,6 @@ body {
     align-items: center;
     position: fixed;
     top: 3rem;
-    right: 2rem;
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 8px;
@@ -59,28 +60,57 @@ body {
     background-color: #ffffff;
     cursor: pointer;
     z-index: 2;
+    /* visibility: hidden; */
+    opacity: 0;
+}
+
+.toggle-music {
+    position: fixed;
+    right: 2rem;
+}
+
+.toggle-theme {
+    position: fixed;
+    right: 6rem;
 }
 
 @media screen and (max-width: 600px) {
-    #toggle {
+    .toggle-music .toggle-theme {
         top: 3rem;
-        right: 1.3rem;
+        right: 1rem;
     }
 }
 
-#toggle svg {
+.toggle-music svg {
     fill: #ffffff;
 
 }
 
-#toggle svg:last-child {
+.toggle-music svg:last-child {
     display: none;
 }
 
-.on #toggle svg:first-child {
+.on .toggle-music svg:first-child {
     display: none;
 }
 
-.on #toggle svg:last-child {
+.on .toggle-music svg:last-child {
+    display: block;
+}
+
+.toggle-theme svg {
+    fill: #ffffff;
+
+}
+
+.toggle-theme svg:last-child {
+    display: none;
+}
+
+.dark .toggle-theme svg:first-child {
+    display: none;
+}
+
+.dark .toggle-theme svg:last-child {
     display: block;
 }

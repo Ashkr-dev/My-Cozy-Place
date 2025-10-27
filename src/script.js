@@ -14,6 +14,7 @@ import { PostProcessingManager } from "./managers/PostProcessingManager.js";
 import Stats from "stats.js";
 import themeVertexShader from "./shaders/theme/vertex.glsl";
 import themeFragmentShader from "./shaders/theme/fragment.glsl";
+import { DarkModeManager } from "./managers/DarkModeManager.js";
 
 /**
  * Stats
@@ -121,7 +122,7 @@ const bakedMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uDayTexture: new THREE.Uniform(bakedDayTexture),
     uNightTexture: new THREE.Uniform(bakedNightTexture),
-    uNightMix: new THREE.Uniform(1),
+    uNightMix: new THREE.Uniform(0),
   },
 });
 
@@ -325,6 +326,9 @@ const rendererFolder = gui.addFolder("Renderer");
 rendererFolder.addColor(debugObject, "clearColor").onChange(() => {
   renderer.setClearColor(debugObject.clearColor);
 });
+
+// Darkmode button
+const darkModeManager = new DarkModeManager(bakedMaterial, gui);
 
 /**
  * Post Processing Manager

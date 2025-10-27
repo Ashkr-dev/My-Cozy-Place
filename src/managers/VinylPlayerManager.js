@@ -13,13 +13,14 @@ Howler.volume(0.4);
 let isMusicPlaying = false;
 let vinylPlayerInstance = null; // We'll store the vinyl player instance here
 
-const soundToggle = document.querySelector("#toggle");
+const soundToggle = document.querySelector(".toggle-music");
 
 const toggleMusic = () => {
   isMusicPlaying = !isMusicPlaying;
 
   if (isMusicPlaying) {
     backgroundMusic.play();
+    backgroundMusic.fade(0, 1, 2000);
     document.body.classList.add("on");
     soundToggle.classList.add("active");
 
@@ -30,6 +31,7 @@ const toggleMusic = () => {
     }
   } else {
     backgroundMusic.pause();
+    backgroundMusic.fade(1, 0, 2000);
     document.body.classList.remove("on");
     soundToggle.classList.remove("active");
 
@@ -203,3 +205,24 @@ export class VinylPlayerManager {
     this.interactiveObjects = [];
   }
 }
+
+const hoverAnimation = () => {
+  // Hover Animation
+  soundToggle.addEventListener("mouseenter", () => {
+    gsap.to(soundToggle, {
+      scale: 1.3,
+      ease: "power2.inOut",
+      duration: 0.2,
+      rotate: "15deg",
+    });
+  });
+  soundToggle.addEventListener("mouseleave", () => {
+    gsap.to(soundToggle, {
+      scale: 1,
+      ease: "power2.inOut",
+      duration: 0.2,
+      rotate: "0deg",
+    });
+  });
+};
+hoverAnimation();

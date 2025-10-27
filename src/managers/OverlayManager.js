@@ -54,6 +54,9 @@ export default class OverlayManager {
   onLoadComplete() {
     gsap.delayedCall(0.5, () => {
       this.gui.show();
+      document.querySelectorAll("#toggle").forEach((toggle) => {
+        gsap.to(toggle, { duration: 0.5, opacity: 1, ease: "power2.inOut" });
+      });
       gsap.to(this.overlayMaterial.uniforms.uAlpha, {
         duration: 3,
         value: 0,
@@ -61,8 +64,6 @@ export default class OverlayManager {
       });
       this.loadingBar.classList.add("ended");
       this.loadingBar.style.transform = "";
-
-      
     });
   }
 
