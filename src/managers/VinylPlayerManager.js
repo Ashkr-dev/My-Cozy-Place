@@ -208,7 +208,7 @@ export class VinylPlayerManager {
 
 const hoverAnimation = () => {
   // Hover Animation
-  soundToggle.addEventListener("mouseenter", () => {
+  soundToggle.addEventListener("pointerenter", () => {
     gsap.to(soundToggle, {
       scale: 1.5,
       ease: "back.out(2)",
@@ -216,23 +216,8 @@ const hoverAnimation = () => {
       rotate: "15deg",
     });
   });
-  soundToggle.addEventListener("touchstart", () => {
-    gsap.to(soundToggle, {
-      scale: 1.5,
-      ease: "back.out(2)",
-      duration: 0.5,
-      rotate: "15deg",
-    });
-  });
-  soundToggle.addEventListener("mouseleave", () => {
-    gsap.to(soundToggle, {
-      scale: 1,
-      ease: "back.out(2)",
-      duration: 0.5,
-      rotate: 0,
-    });
-  });
-  soundToggle.addEventListener("touchend", () => {
+
+  soundToggle.addEventListener("pointerleave", () => {
     gsap.to(soundToggle, {
       scale: 1,
       ease: "back.out(2)",
