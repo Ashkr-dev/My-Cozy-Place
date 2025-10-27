@@ -12,7 +12,7 @@ const backgroundMusic = new Howl({
 const popSound = new Howl({
   src: ["pop-sound.mp3"],
   preload: true,
-  volume: 0.2,
+  volume: 0.15,
   fade: true,
 });
 
@@ -27,9 +27,9 @@ const fireplaceCrackling = new Howl({
   preload: true,
   autoplay: true,
   volume: 0.25,
+  loop: true,
 });
 // fireplaceCrackling.play();
-
 
 // Simple synchronized state
 let isMusicPlaying = false;

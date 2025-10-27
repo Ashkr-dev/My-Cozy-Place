@@ -4,10 +4,9 @@ import { Howl } from "howler";
 const popSound = new Howl({
   src: ["pop-sound.mp3"],
   preload: true, // Add preload to ensure it's ready
-  volume: 0.2,
+  volume: 0.15,
   fade: true,
 });
-
 
 export class DarkModeManager {
   constructor(bakedMaterial, gui) {
@@ -45,10 +44,10 @@ export class DarkModeManager {
         this.updateDOM();
       });
 
-    // Optional: Add sound control to GUI
-    themeFolder
-      .add(this, 'soundEnabled')
-      .name("Toggle Sound");
+    // // Optional: Add sound control to GUI
+    // themeFolder
+    //   .add(this, 'soundEnabled')
+    //   .name("Toggle Sound");
   }
 
   setupEventListeners() {
@@ -89,13 +88,13 @@ export class DarkModeManager {
 
   toggle() {
     this.isDarkMode = !this.isDarkMode;
-    
+
     // Play pop sound when toggling
     this.playToggleSound();
-    
+
     // Add click animation
     this.animateToggle();
-    
+
     this.updateTheme();
   }
 
@@ -103,10 +102,10 @@ export class DarkModeManager {
     if (this.soundEnabled && popSound) {
       // Stop any currently playing instance to avoid overlap
       popSound.stop();
-      
+
       // Play the sound
       popSound.play();
-      
+
       // Optional: Add slight random pitch variation for more natural sound
       const pitch = 0.9 + Math.random() * 0.2; // Between 0.9 and 1.1
       popSound.rate(pitch);
@@ -133,7 +132,6 @@ export class DarkModeManager {
     //     });
     //   }
     // });
-
     // // Optional: Add rotation animation on click
     // this.gsap.to(this.toggleButton, {
     //   rotation: "+=360",

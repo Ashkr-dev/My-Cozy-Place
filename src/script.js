@@ -126,13 +126,6 @@ const bakedMaterial = new THREE.ShaderMaterial({
   },
 });
 
-const themeFolder = gui.addFolder("Theme");
-themeFolder
-  .add(bakedMaterial.uniforms.uNightMix, "value")
-  .min(0)
-  .max(1)
-  .name("Night Mix");
-
 /**
  * Emissive Material
  */
