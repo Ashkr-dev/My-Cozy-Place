@@ -1,8 +1,12 @@
 @font-face {
     font-family: comfort;
-    src: url("./fonts/Comforter-Regular.woff2") format("woff2");
+    src: url("/static/fonts/Comforter-Regular.woff2") format("woff2"),
+        url("/static/fonts/Comforter-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
     font-display: swap;
 }
+
 
 * {
     margin: 0;
