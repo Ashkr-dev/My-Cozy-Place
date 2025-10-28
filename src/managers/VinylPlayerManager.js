@@ -3,29 +3,28 @@ import { Howl, Howler } from "howler";
 
 // Create a sound instance
 const backgroundMusic = new Howl({
-  src: ["soft-piano.mp3"],
+  src: ["./sounds/soft-piano.mp3"],
   loop: true,
   preload: true,
   volume: 0.4,
 });
 
 const popSound = new Howl({
-  src: ["pop-sound.mp3"],
+  src: ["./sounds/pop-sound.mp3"],
   preload: true,
   volume: 0.15,
   fade: true,
 });
 
 const vinylSound = new Howl({
-  src: ["vinyl-noise.mp3"],
+  src: ["./sounds/vinyl-noise.mp3"],
   preload: true,
   volume: 0.2,
 });
 
 const fireplaceCrackling = new Howl({
-  src: ["fire-crackling.mp3"],
+  src: ["./sounds/fire-crackling.mp3"],
   preload: true,
-  autoplay: true,
   volume: 0.25,
   loop: true,
 });
@@ -42,6 +41,7 @@ const toggleMusic = () => {
 
   if (isMusicPlaying) {
     popSound.play();
+    fireplaceCrackling.play();
     backgroundMusic.play();
     backgroundMusic.fade(0, 1, 1000);
     document.body.classList.add("on");
@@ -54,6 +54,7 @@ const toggleMusic = () => {
     }
   } else {
     popSound.play();
+    fireplaceCrackling.stop();
     backgroundMusic.pause();
     backgroundMusic.fade(1, 0, 1000);
     document.body.classList.remove("on");

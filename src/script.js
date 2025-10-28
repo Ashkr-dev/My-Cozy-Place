@@ -29,7 +29,7 @@ document.body.appendChild(stats.dom);
 // Debug
 const debugObject = {
   color: "#f4f3d7",
-  clearColor1: "#60451f",
+  clearColor1: "#30220d",
   clearColor2: "#030407",
 };
 
@@ -59,7 +59,7 @@ gltfLoader.setDRACOLoader(dracoLoader);
 /**
  * Baked Textures & Perlin
  */
-const perlinTexture = textureLoader.load("./perlin.png");
+const perlinTexture = textureLoader.load("./textures/perlin.png");
 perlinTexture.wrapS = THREE.RepeatWrapping;
 perlinTexture.wrapT = THREE.RepeatWrapping;
 
@@ -106,11 +106,11 @@ window.addEventListener("click", (event) => {
 });
 
 // Baked Texture
-const bakedDayTexture = textureLoader.load("./Baked-Day.webp");
+const bakedDayTexture = textureLoader.load("./textures/Baked-Day.webp");
 bakedDayTexture.flipY = false;
 bakedDayTexture.colorSpace = THREE.SRGBColorSpace;
 
-const bakedNightTexture = textureLoader.load("./Baked-Night.webp");
+const bakedNightTexture = textureLoader.load("./textures/Baked-Night.webp");
 bakedNightTexture.flipY = false;
 bakedNightTexture.colorSpace = THREE.SRGBColorSpace;
 
@@ -158,7 +158,7 @@ const candleMaterial = new CandlesMaterial(perlinTexture, gui);
  */
 let bakedMesh = null;
 
-const cozy_place = gltfLoader.load("./cozy_place4.glb", (gltf) => {
+const cozy_place = gltfLoader.load("./models/cozy_place4.glb", (gltf) => {
   // Baked Mesh
   bakedMesh = gltf.scene.getObjectByName("baked");
   bakedMesh.material = bakedMaterial;

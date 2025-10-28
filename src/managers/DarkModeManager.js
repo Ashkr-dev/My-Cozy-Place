@@ -2,7 +2,7 @@ import gsap from "gsap";
 import { Howl } from "howler";
 
 const popSound = new Howl({
-  src: ["pop-sound.mp3"],
+  src: ["./sounds/pop-sound.mp3"],
   preload: true, // Add preload to ensure it's ready
   volume: 0.15,
   fade: true,
