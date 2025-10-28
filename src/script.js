@@ -29,7 +29,8 @@ document.body.appendChild(stats.dom);
 // Debug
 const debugObject = {
   color: "#f4f3d7",
-  clearColor: "#000205",
+  clearColor1: "#60451f",
+  clearColor2: "#030407",
 };
 
 const gui = new GUI({
@@ -312,16 +313,20 @@ const renderer = new THREE.WebGLRenderer({
 
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(debugObject.clearColor);
 
-// Add clear color control to GUI
-const rendererFolder = gui.addFolder("Renderer");
-rendererFolder.addColor(debugObject, "clearColor").onChange(() => {
-  renderer.setClearColor(debugObject.clearColor);
-});
+// // Add clear color control to GUI
+// const rendererFolder = gui.addFolder("Renderer");
+// rendererFolder.addColor(debugObject, "clearColor").onChange(() => {
+//   renderer.setClearColor(debugObject.clearColor);
+// });
 
 // Darkmode button
-const darkModeManager = new DarkModeManager(bakedMaterial, gui);
+const darkModeManager = new DarkModeManager(
+  bakedMaterial,
+  gui,
+  renderer,
+  debugObject
+);
 
 /**
  * Post Processing Manager

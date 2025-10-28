@@ -9,10 +9,12 @@ const popSound = new Howl({
 });
 
 export class DarkModeManager {
-  constructor(bakedMaterial, gui) {
+  constructor(bakedMaterial, gui, renderer, debugObject) {
     this.bakedMaterial = bakedMaterial;
     this.gui = gui;
     this.gsap = gsap;
+    this.renderer = renderer;
+    this.debugObject = debugObject;
     this.isDarkMode = false;
     this.toggleButton = document.querySelector(".toggle-theme");
     this.soundEnabled = true; // Add sound toggle flag
@@ -39,15 +41,28 @@ export class DarkModeManager {
       .max(1)
       .name("Night Mix")
       .onChange((value) => {
-        // Sync GUI changes with dark mode state
         this.isDarkMode = value === 0;
-        this.updateDOM();
+        this.updateTheme(); // Update everything including clear color
       });
 
-    // // Optional: Add sound control to GUI
-    // themeFolder
-    //   .add(this, 'soundEnabled')
-    //   .name("Toggle Sound");
+    // Add clear color controls to GUI
+    const rendererFolder = this.gui.addFolder("Renderer");
+    rendererFolder
+      .addColor(this.debugObject, "clearColor1")
+      .name("Day BG Color")
+      .onChange(() => {
+        if (this.isDarkMode) {
+          this.renderer.setClearColor(this.debugObject.clearColor1);
+        }
+      });
+    rendererFolder
+      .addColor(this.debugObject, "clearColor2")
+      .name("Night BG Color")
+      .onChange(() => {
+        if (!this.isDarkMode) {
+          this.renderer.setClearColor(this.debugObject.clearColor2);
+        }
+      });
   }
 
   setupEventListeners() {
@@ -112,37 +127,18 @@ export class DarkModeManager {
     }
   }
 
-  animateToggle() {
-    // Click animation - quick scale down then back up
-    // this.gsap.to(this.toggleButton, {
-    //   scale: 0.8,
-    //   duration: 0.1,
-    //   ease: "power2.in",
-    //   onComplete: () => {
-    //     this.gsap.to(this.toggleButton, {
-    //       scale: 1.2,
-    //       duration: 0.2,
-    //       ease: "back.out(1.7)",
-    //       onComplete: () => {
-    //         this.gsap.to(this.toggleButton, {
-    //           scale: 1,
-    //           duration: 0.1
-    //         });
-    //       }
-    //     });
-    //   }
-    // });
-    // // Optional: Add rotation animation on click
-    // this.gsap.to(this.toggleButton, {
-    //   rotation: "+=360",
-    //   duration: 0.6,
-    //   ease: "back.out(1.7)"
-    // });
-  }
+  animateToggle() {}
 
   updateTheme() {
     // Update material uniform
     this.bakedMaterial.uniforms.uNightMix.value = this.isDarkMode ? 0 : 1;
+
+    // Update renderer clear color based on theme
+    const clearColor = this.isDarkMode
+      ? this.debugObject.clearColor1
+      : this.debugObject.clearColor2;
+
+    this.renderer.setClearColor(clearColor);
 
     // Update GUI to reflect changes
     this.bakedMaterial.uniforms.uNightMix.needsUpdate = true;
