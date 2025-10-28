@@ -1,6 +1,7 @@
 @font-face {
     font-family: comfort;
     src: url("./fonts/Comforter-Regular.woff2") format("woff2");
+    font-display: swap;
 }
 
 * {
