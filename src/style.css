@@ -57,7 +57,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    font-family: comfort, sans-serif;
+    font-family: comfort;
     text-align: center;
     z-index: 2;
     color: whitesmoke;
