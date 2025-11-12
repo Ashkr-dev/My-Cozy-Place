@@ -52,7 +52,7 @@ export class PostProcessingManager {
 
     // Gamma Correction Pass
     this.passes.gammaPass = new ShaderPass(GammaCorrectionShader);
-    this.passes.gammaPass.enabled = false;
+    this.passes.gammaPass.enabled = true;
     this.composer.addPass(this.passes.gammaPass);
 
     // SMAA Pass (if needed)
